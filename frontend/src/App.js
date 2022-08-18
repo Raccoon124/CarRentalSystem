@@ -1,13 +1,19 @@
-import './App.css';
-import { TableAxios } from './tables/TableAxios';
-import ResponsiveAppBar from './bar/ResponsiveAppBar';
+import React from "react";
+import "./App.css";
+import ResponsiveAppBar from "./components/Nav";
+import Booking from "./components/Booking";
+import Car from "./components/Car";
+import { Route,Routes} from "react-router"
+
 
 function App() {
   return (
     <div className="App">
-      <ResponsiveAppBar/>
-      <TableAxios /> 
-
+      <ResponsiveAppBar />
+      <Routes>
+      <Route path="Car" element={<Car />}/>
+      <Route path="booking" element={<Booking />}/>
+      </Routes>
     </div>
   );
 }

@@ -1,73 +1,63 @@
 import { useState, useEffect } from "react";
 import MUIDataTable from "mui-datatables";
 import axios from "axios";
+import Switch from "@material-ui/core/Switch";
 
 export const TableAxios = () => {
-//1 - configuramos Los hooks
-const [cars, setCars] = useState( [] )
+  const [cars, setCars] = useState([]);
 
-//2 - fcion para mostrar los datos con axios
-const endpoint = 'http://localhost:8080/cars/allCars'
+  const endpoint = "http://localhost:8080/car/allCars";
 
-const getData = async () => {
+  const getData = async () => {
     await axios.get(endpoint).then((response) => {
-        const data = response.data
-        console.log(data)
-        setCars(data)
-    })
-}
+      const data = response.data;
+      console.log(data);
+      setCars(data);
+    });
+  };
 
-useEffect( ()=>{
-    getData()
-}, [])
+  useEffect(() => {
+    getData();
+  }, []);
 
-
-//3 - Definimos las columns
-const columns = [
+  const columns = [
     {
-        name: "id",
-        label: "ID"
+      name: "id",
+      label: "ID",
     },
     {
-        name: "name",
-        label: "NAME"
+      name: "available",
+      label: "AVAILABLE",
+      options: {
+        filter: true,
+        sort:false,
+        customBodyRender: (value, tableMeta, updateValue) => {
+          return (
+            <div>
+              <Switch checked={value}/>
+            </div>
+          );
+        },
+      },
     },
     {
-        name: "model",
-        label: "MODEL"
+      name: "classification",
+      label: "CLASSIFICATION",
     },
     {
-        name: "available",
-        label: "AVAILABLE",
+      name: "model",
+      label: "MODEL",
     },
     {
-        name: "classification",
-        label: "CLASSIFICATION"
-    }
-    ,
+      name: "name",
+      label: "NAME",
+    },
     {
-        name: "Reservation",
-        label: "Reservation",
-        options: {
-            customBodyRender: (value, tableMeta, updateValue) => {
-                return (
-                    <button onClick={() => console.log(value, tableMeta) }>
-                        Edit
-                    </button>
-                )
-            }
-        }
-    }
-]
+      name: "price",
+      label: "PRICE",
+    },
+  ];
 
-
-//4 - renderizamos la datatable
-        return (
-            <MUIDataTable 
-            title={"Cars"}
-            data={cars}
-            columns={columns}
-            />
-        )
-
-}
+  //render
+  return <MUIDataTable title={"Cars"} data={cars} columns={columns} />;
+};

@@ -1,32 +1,52 @@
 package mx.tc.project.CarRentalSystem.controllers;
 
-import mx.tc.project.CarRentalSystem.models.BookingModel;
+import mx.tc.project.CarRentalSystem.models.Booking;
 import mx.tc.project.CarRentalSystem.services.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
+import javax.xml.ws.http.HTTPBinding;
+import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/booking")
 public class BookingController {
 
     @Autowired
-    BookingService bookingService;
+    private BookingService bookingService;
 
-    @GetMapping(path = "/allBooking")
-    public ArrayList<BookingModel> getAllBooking(){
+    @GetMapping("/allBooking")
+    public List<Booking> findAllBooking() {
         return bookingService.getAllBooking();
     }
 
-    @GetMapping(path="/{id}")
-    public Optional<BookingModel> getById(@PathVariable("id")Long id){
-        return this.bookingService.getById(id);
+    @GetMapping("/car/{id}")
+    public List<Booking> getBookingByCarId(@PathVariable Long id) {
+        return bookingService.getBookingByCarId(id);
+    }
+    @GetMapping("/{id}")
+    public Booking finBookingById(@PathVariable Long id) {
+        return bookingService.getBookingById(id);
     }
 
+    @PostMapping("/addBooking")
+    public Booking addBooking(@RequestBody Booking booking) {
+        return bookingService.saveBooking(booking);
+    }
+
+    @PutMapping("/update")
+    public Booking updateBooking(@RequestBody Booking booking) {
+        return bookingService.updateBooking(booking);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteBooking(@PathVariable Long id) {
+        return bookingService.deleteById(id);
+    }
 
 }

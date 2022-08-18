@@ -1,29 +1,52 @@
 package mx.tc.project.CarRentalSystem.services;
 
-import mx.tc.project.CarRentalSystem.models.CarModel;
+import mx.tc.project.CarRentalSystem.models.Car;
 import mx.tc.project.CarRentalSystem.repositories.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class CarService {
 
+
     @Autowired
-    CarRepository carRepository;
-    public ArrayList<CarModel> getAllCars(){
-        return (ArrayList<CarModel>) carRepository.findAll();
+    private CarRepository carRepository;
+
+    public Car saveCar(Car car) {
+        return carRepository.save(car);
     }
-    public Optional<CarModel> getByIDCar(Long id){
-        return carRepository.findById(id);
+
+    public List<Car> getAllCars() {
+        return carRepository.findAll();
     }
-    public ArrayList<CarModel> getByModel(Integer model){
-        return carRepository.findByModel(model);
+
+    public Car getCarById(Long id) {
+        return carRepository.findById(id).orElse(null);
     }
-    public ArrayList<CarModel> getByName(String name){
-        return carRepository.findByName(name);
+
+    public Car getCarByName(String name) {
+        return carRepository.findCarByName(name);
     }
+
+    public String deleteById(Long id) {
+
+        carRepository.deleteById(id);
+        return "Car removed";
+    }
+
+
+    public Car updateCar(Car car) {
+        Car existingCar = carRepository.findById(car.getId()).orElse(null);
+        assert existingCar != null;
+        existingCar.setAvailable(car.isAvailable());
+        existingCar.setClassification(car.getClassification());
+        existingCar.setModel(car.getModel());
+        existingCar.setName(car.getName());
+        existingCar.setPrice(car.getPrice());
+        return carRepository.save(existingCar);
+    }
+
 
 }
